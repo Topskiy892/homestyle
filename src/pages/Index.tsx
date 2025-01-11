@@ -1,4 +1,4 @@
-import { ArrowRight, Truck, Clock, Tool, Shield, Star, Users } from "lucide-react";
+import { ArrowRight, Truck, Clock, Wrench, Shield, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import SectionTitle from "../components/shared/SectionTitle";
 import ProductCard from "../components/shared/ProductCard";
@@ -29,7 +29,7 @@ const featuredProducts = [
 
 const benefits = [
   {
-    icon: Tool,
+    icon: Wrench,
     title: "Собственное производство",
     description: "Полный контроль качества на всех этапах производства",
   },

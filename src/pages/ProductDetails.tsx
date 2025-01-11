@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { ChevronRight, Truck, Shield, Tool } from "lucide-react";
+import { ChevronRight, Truck, Shield, Wrench } from "lucide-react";
 import SectionTitle from "../components/shared/SectionTitle";
 import ProductCard from "../components/shared/ProductCard";
 
@@ -130,7 +130,7 @@ const ProductDetails = () => {
                 <span className="text-sm">Гарантия 2 года</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Tool className="text-accent" />
+                <Wrench className="text-accent" />
                 <span className="text-sm">Установка</span>
               </div>
             </div>
