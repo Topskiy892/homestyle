@@ -35,7 +35,27 @@ const products = [
     image: "/placeholder.svg",
     category: "Стеллажи",
   },
-  // Add more products...
+  {
+    id: 4,
+    name: "Обеденный стол Industrial",
+    price: 32000,
+    image: "/placeholder.svg",
+    category: "Столы",
+  },
+  {
+    id: 5,
+    name: "Стул Vintage",
+    price: 12000,
+    image: "/placeholder.svg",
+    category: "Стулья",
+  },
+  {
+    id: 6,
+    name: "Кровать Comfort",
+    price: 55000,
+    image: "/placeholder.svg",
+    category: "Кровати",
+  }
 ];
 
 const Catalog = () => {
@@ -96,9 +116,7 @@ const Catalog = () => {
             <div
               key={product.id}
               className="animate-fade-up"
-              style={{ animation
-
-Delay: `${index * 100}ms` }}
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <ProductCard {...product} />
             </div>

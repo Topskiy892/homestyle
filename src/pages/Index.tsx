@@ -1,4 +1,4 @@
-import { ArrowRight, Truck, Clock, Tool, Shield } from "lucide-react";
+import { ArrowRight, Truck, Clock, Tool, Shield, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import SectionTitle from "../components/shared/SectionTitle";
 import ProductCard from "../components/shared/ProductCard";
@@ -24,7 +24,7 @@ const featuredProducts = [
     price: 28000,
     image: "/placeholder.svg",
     category: "Стеллажи",
-  },
+  }
 ];
 
 const benefits = [
@@ -47,7 +47,22 @@ const benefits = [
     icon: Shield,
     title: "Гарантия качества",
     description: "Предоставляем гарантию на всю продукцию",
+  }
+];
+
+const testimonials = [
+  {
+    name: "Анна М.",
+    role: "Владелец кафе",
+    content: "Заказывали комплект мебели для нашего кафе. Качество превзошло все ожидания!",
+    rating: 5,
   },
+  {
+    name: "Сергей К.",
+    role: "Дизайнер интерьеров",
+    content: "Регулярно сотрудничаем с AllLoft. Всегда точные сроки и отличное качество.",
+    rating: 5,
+  }
 ];
 
 const Index = () => {
@@ -154,6 +169,83 @@ const Index = () => {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-secondary">
+        <div className="container">
+          <SectionTitle
+            title="Отзывы клиентов"
+            subtitle="Что говорят о нас наши клиенты"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="card p-6 animate-fade-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-center mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-5 h-5 text-accent fill-accent"
+                    />
+                  ))}
+                </div>
+                <p className="text-lg mb-4">{testimonial.content}</p>
+                <div className="flex items-center">
+                  <div>
+                    <p className="font-semibold">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20">
+        <div className="container">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-accent mb-2">8+</div>
+              <div className="text-muted-foreground">Лет на рынке</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-accent mb-2">1000+</div>
+              <div className="text-muted-foreground">Довольных клиентов</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-accent mb-2">2500+</div>
+              <div className="text-muted-foreground">Выполненных заказов</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-accent mb-2">85+</div>
+              <div className="text-muted-foreground">Городов доставки</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-accent text-white">
+        <div className="container text-center">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+            Готовы обсудить ваш проект?
+          </h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            Свяжитесь с нами для консультации и расчета стоимости
+          </p>
+          <Link to="/contacts" className="btn-secondary inline-flex items-center space-x-2">
+            <span>Связаться с нами</span>
+            <ArrowRight size={20} />
+          </Link>
         </div>
       </section>
     </div>
