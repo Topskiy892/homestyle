@@ -9,7 +9,7 @@ const Contacts = () => {
       <section className="relative h-[40vh] flex items-center">
         <div className="absolute inset-0 bg-black/50 z-10" />
         <img
-          src="/placeholder.svg"
+          src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80"
           alt="Контакты"
           className="absolute inset-0 w-full h-full object-cover"
         />

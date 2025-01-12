@@ -8,21 +8,21 @@ const featuredProducts = [
     id: 1,
     name: "Кухонный гарнитур Modern",
     price: 85000,
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7?auto=format&fit=crop&q=80",
     category: "Кухни",
   },
   {
     id: 2,
     name: "Шкаф-купе Premium",
     price: 45000,
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&q=80",
     category: "Шкафы",
   },
   {
     id: 3,
     name: "Стеллаж Loft",
     price: 28000,
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&q=80",
     category: "Стеллажи",
   }
 ];
@@ -56,12 +56,14 @@ const testimonials = [
     role: "Владелец кафе",
     content: "Заказывали комплект мебели для нашего кафе. Качество превзошло все ожидания!",
     rating: 5,
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80",
   },
   {
     name: "Сергей К.",
     role: "Дизайнер интерьеров",
     content: "Регулярно сотрудничаем с AllLoft. Всегда точные сроки и отличное качество.",
     rating: 5,
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80",
   }
 ];
 
@@ -72,8 +74,8 @@ const Index = () => {
       <section className="relative h-[80vh] flex items-center">
         <div className="absolute inset-0 bg-black/50 z-10" />
         <img
-          src="/placeholder.svg"
-          alt="Hero"
+          src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&q=80"
+          alt="Современная мебель"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="container relative z-20 text-white">
@@ -163,7 +165,7 @@ const Index = () => {
             </div>
             <div className="animate-fade-up">
               <img
-                src="/placeholder.svg"
+                src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&q=80"
                 alt="О компании"
                 className="rounded-lg shadow-xl"
               />

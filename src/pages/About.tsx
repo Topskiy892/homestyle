@@ -38,7 +38,7 @@ const About = () => {
       <section className="relative h-[60vh] flex items-center">
         <div className="absolute inset-0 bg-black/50 z-10" />
         <img
-          src="/placeholder.svg"
+          src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&q=80"
           alt="О компании"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -75,7 +75,7 @@ const About = () => {
             </div>
             <div className="animate-fade-up">
               <img
-                src="/placeholder.svg"
+                src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&q=80"
                 alt="История компании"
                 className="rounded-lg shadow-xl"
               />
@@ -159,7 +159,7 @@ const About = () => {
             </div>
             <div className="animate-fade-up">
               <img
-                src="/placeholder.svg"
+                src="https://images.unsplash.com/photo-1581428982868-e410dd047a90?auto=format&fit=crop&q=80"
                 alt="Производство"
                 className="rounded-lg shadow-xl"
               />
