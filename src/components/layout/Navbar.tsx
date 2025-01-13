@@ -23,7 +23,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center space-x-2">
             <span className="text-2xl font-heading font-bold text-primary">
-              AllLoft
+              HomeStyle
             </span>
           </Link>
 

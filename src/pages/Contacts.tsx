@@ -42,10 +42,10 @@ const Contacts = () => {
               <Mail className="w-12 h-12 mx-auto mb-4 text-accent" />
               <h3 className="font-heading font-semibold text-lg mb-2">Email</h3>
               <a
-                href="mailto:info@allloft.ru"
+                href="mailto:info@homestyle.ru"
                 className="text-accent hover:text-accent/80 transition-colors"
               >
-                info@allloft.ru
+                info@homestyle.ru
               </a>
             </div>
 

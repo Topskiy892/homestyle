@@ -44,7 +44,7 @@ const About = () => {
         />
         <div className="container relative z-20 text-white">
           <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6">
-            О компании AllLoft
+            О компании HomeStyle
           </h1>
           <p className="text-xl max-w-2xl">
             Создаем уникальную мебель с 2015 года
@@ -61,7 +61,7 @@ const About = () => {
                 История компании
               </h2>
               <p className="text-lg mb-6">
-                AllLoft начала свой путь в 2015 году как небольшая мастерская по
+                HomeStyle начала свой путь в 2015 году как небольшая мастерская по
                 производству мебели в стиле лофт. За годы работы мы выросли в
                 крупное производство, но сохранили главное – внимание к деталям и
                 индивидуальный подход к каждому клиенту.
