@@ -31,10 +31,10 @@ const Contacts = () => {
               <Phone className="w-12 h-12 mx-auto mb-4 text-accent" />
               <h3 className="font-heading font-semibold text-lg mb-2">Телефон</h3>
               <a
-                href="tel:+79991102868"
+                href="tel:+79770440344"
                 className="text-accent hover:text-accent/80 transition-colors"
               >
-                +7 (999) 110-28-68
+                +7 (977) 044-03-44
               </a>
             </div>
 
@@ -42,10 +42,10 @@ const Contacts = () => {
               <Mail className="w-12 h-12 mx-auto mb-4 text-accent" />
               <h3 className="font-heading font-semibold text-lg mb-2">Email</h3>
               <a
-                href="mailto:info@homestyle.ru"
+                href="mailto:vladimirproverka02@gmail.com"
                 className="text-accent hover:text-accent/80 transition-colors"
               >
-                info@homestyle.ru
+                vladimirproverka02@gmail.com
               </a>
             </div>
 
@@ -53,7 +53,7 @@ const Contacts = () => {
               <MapPin className="w-12 h-12 mx-auto mb-4 text-accent" />
               <h3 className="font-heading font-semibold text-lg mb-2">Адрес</h3>
               <p className="text-muted-foreground">
-                Московская улица, Кузнецк
+                г. Кузнецк
               </p>
             </div>
 

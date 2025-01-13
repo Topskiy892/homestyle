@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div>
-            <h3 className="text-xl font-heading font-semibold mb-4">AllLoft</h3>
+            <h3 className="text-xl font-heading font-semibold mb-4">HomeStyle</h3>
             <p className="text-gray-300 mb-4">
               Создаем уникальную мебель для вашего комфорта с 2015 года
             </p>
@@ -19,17 +19,17 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-heading font-semibold mb-4">Контакты</h3>
             <div className="space-y-3">
-              <a href="tel:+79991102868" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
+              <a href="tel:+79770440344" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
                 <Phone size={18} />
-                <span>+7 (999) 110-28-68</span>
+                <span>+7 (977) 044-03-44</span>
               </a>
-              <a href="mailto:info@allloft.ru" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
+              <a href="mailto:vladimirproverka02@gmail.com" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
                 <Mail size={18} />
-                <span>info@allloft.ru</span>
+                <span>vladimirproverka02@gmail.com</span>
               </a>
               <div className="flex items-center space-x-2 text-gray-300">
                 <MapPin size={18} />
-                <span>Московская улица, Кузнецк</span>
+                <span>г. Кузнецк</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300">
                 <Clock size={18} />
@@ -81,7 +81,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-700 pt-8 mt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} AllLoft. Все права защищены.</p>
+          <p>&copy; {new Date().getFullYear()} HomeStyle. Все права защищены.</p>
         </div>
       </div>
     </footer>
