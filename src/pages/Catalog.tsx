@@ -69,6 +69,13 @@ const products = [
     price: 38000,
     image: "https://images.unsplash.com/photo-1558997519-83ea9252edf8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     category: "Шкафы",
+  },
+  {
+    id: 9,
+    name: "Стол письменный Modern",
+    price: 25000,
+    image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    category: "Столы",
   }
 ];
 
