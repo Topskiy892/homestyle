@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS with your public key
-emailjs.init(process.env.EMAILJS_PUBLIC_KEY);
+emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -28,10 +28,10 @@ const ContactForm = () => {
       console.log('Sending contact form with params:', templateParams);
 
       const response = await emailjs.send(
-        process.env.EMAILJS_SERVICE_ID,
-        process.env.EMAILJS_TEMPLATE_ID,
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         templateParams,
-        process.env.EMAILJS_PUBLIC_KEY
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
       console.log('EmailJS Response:', response);
