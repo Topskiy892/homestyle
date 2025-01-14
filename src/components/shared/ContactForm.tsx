@@ -23,10 +23,10 @@ const ContactForm = () => {
       };
 
       await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        'service_ntpcrkx',
+        'template_9nytvtb',
         templateParams,
-        'YOUR_PUBLIC_KEY'
+        'c_WX-BiMyFlw2O75HAlbT'
       );
 
       toast.success("Сообщение отправлено! Мы свяжемся с вами в ближайшее время.");
