@@ -45,8 +45,8 @@ const Cart = () => {
       console.log('Sending order with params:', templateParams);
 
       const response = await emailjs.send(
-        'service_ntpcrkx',
-        'template_9nytvtb',
+        process.env.EMAILJS_SERVICE_ID,
+        process.env.EMAILJS_TEMPLATE_ID,
         templateParams,
         process.env.EMAILJS_PUBLIC_KEY
       );
