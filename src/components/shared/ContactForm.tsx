@@ -2,9 +2,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS with your public key
-emailjs.init("c_WX-BiMyFlw2O75HAlbT");
-
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +21,8 @@ const ContactForm = () => {
         from_phone: formData.phone,
         message: formData.message,
       };
+
+      console.log('Sending contact form with params:', templateParams);
 
       const response = await emailjs.send(
         'service_ntpcrkx',

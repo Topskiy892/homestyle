@@ -7,9 +7,6 @@ import { useState } from "react";
 import emailjs from '@emailjs/browser';
 import { toast } from "sonner";
 
-// Initialize EmailJS with your public key
-emailjs.init("c_WX-BiMyFlw2O75HAlbT");
-
 const Cart = () => {
   const { items, removeItem, getTotalPrice, clearCart } = useCart();
   const [formData, setFormData] = useState({
@@ -41,6 +38,8 @@ const Cart = () => {
         order_details: orderDetails,
         total_price: `${getTotalPrice()}₽`,
       };
+
+      console.log('Sending order with params:', templateParams);
 
       const response = await emailjs.send(
         'service_ntpcrkx',
