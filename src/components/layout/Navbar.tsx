@@ -1,78 +1,93 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Menu, X, ShoppingCart } from "lucide-react";
+import { useCart } from "../../contexts/CartContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+  const { items } = useCart();
 
-  const navigation = [
-    { name: "Главная", href: "/" },
-    { name: "Каталог", href: "/catalog" },
-    { name: "О нас", href: "/about" },
-    { name: "Контакты", href: "/contacts" },
-  ];
-
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
+  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className="bg-white shadow-sm fixed w-full z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-20">
-          <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-heading font-bold text-primary">
-              HomeStyle
-            </span>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b">
+      <div className="container">
+        <div className="flex h-20 items-center justify-between">
+          <Link to="/" className="font-heading font-bold text-xl">
+            HomeStyle
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`nav-link ${
-                  isActive(item.href)
-                    ? "text-accent font-semibold"
-                    : "text-gray-700"
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link to="/" className="nav-link">
+              Главная
+            </Link>
+            <Link to="/catalog" className="nav-link">
+              Каталог
+            </Link>
+            <Link to="/about" className="nav-link">
+              О нас
+            </Link>
+            <Link to="/contacts" className="nav-link">
+              Контакты
+            </Link>
+            <Link to="/cart" className="relative">
+              <ShoppingCart className="h-6 w-6" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-accent text-white text-xs flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
           </div>
 
-          {/* Mobile Navigation Button */}
-          <div className="md:hidden">
+          {/* Mobile Navigation */}
+          <div className="md:hidden flex items-center">
+            <Link to="/cart" className="relative mr-4">
+              <ShoppingCart className="h-6 w-6" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-accent text-white text-xs flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-accent"
+              className="text-primary p-2"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X /> : <Menu />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation Menu */}
+        {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden absolute top-20 left-0 w-full bg-white border-t border-gray-200 animate-fade-in">
-            <div className="flex flex-col space-y-4 px-4 py-6">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`nav-link ${
-                    isActive(item.href)
-                      ? "text-accent font-semibold"
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+          <div className="md:hidden py-4">
+            <div className="flex flex-col space-y-4">
+              <Link to="/" className="nav-link" onClick={() => setIsOpen(false)}>
+                Главная
+              </Link>
+              <Link
+                to="/catalog"
+                className="nav-link"
+                onClick={() => setIsOpen(false)}
+              >
+                Каталог
+              </Link>
+              <Link
+                to="/about"
+                className="nav-link"
+                onClick={() => setIsOpen(false)}
+              >
+                О нас
+              </Link>
+              <Link
+                to="/contacts"
+                className="nav-link"
+                onClick={() => setIsOpen(false)}
+              >
+                Контакты
+              </Link>
             </div>
           </div>
         )}

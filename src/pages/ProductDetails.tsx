@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { ChevronRight, Truck, Shield, Wrench } from "lucide-react";
 import SectionTitle from "../components/shared/SectionTitle";
 import ProductCard from "../components/shared/ProductCard";
+import { useCart } from "../contexts/CartContext";
+import { toast } from "sonner";
 
 // Mock data - replace with real data
 const product = {
@@ -42,6 +44,23 @@ const relatedProducts = [
 const ProductDetails = () => {
   const { id } = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      category: product.category,
+    });
+  };
+
+  const handleConsultation = () => {
+    toast.success(
+      "Запрос на консультацию отправлен! Мы свяжемся с вами в ближайшее время."
+    );
+  };
 
   return (
     <div className="py-12 animate-fade-in">
@@ -137,8 +156,13 @@ const ProductDetails = () => {
 
             {/* Action Buttons */}
             <div className="space-y-4">
-              <button className="btn-primary w-full">Заказать</button>
-              <button className="btn-secondary w-full">
+              <button onClick={handleAddToCart} className="btn-primary w-full">
+                Заказать
+              </button>
+              <button
+                onClick={handleConsultation}
+                className="btn-secondary w-full"
+              >
                 Получить консультацию
               </button>
             </div>
