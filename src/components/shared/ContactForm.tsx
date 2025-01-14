@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import emailjs from '@emailjs/browser';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -9,12 +10,31 @@ const ContactForm = () => {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log("Form submitted:", formData);
-    toast.success("Сообщение отправлено! Мы свяжемся с вами в ближайшее время.");
-    setFormData({ name: "", phone: "", email: "", message: "" });
+    
+    try {
+      const templateParams = {
+        to_email: 'homestyle158@gmail.com',
+        from_name: formData.name,
+        from_email: formData.email,
+        from_phone: formData.phone,
+        message: formData.message,
+      };
+
+      await emailjs.send(
+        'YOUR_SERVICE_ID',
+        'YOUR_TEMPLATE_ID',
+        templateParams,
+        'YOUR_PUBLIC_KEY'
+      );
+
+      toast.success("Сообщение отправлено! Мы свяжемся с вами в ближайшее время.");
+      setFormData({ name: "", phone: "", email: "", message: "" });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error("Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте позже.");
+    }
   };
 
   const handleChange = (

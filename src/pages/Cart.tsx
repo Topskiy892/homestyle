@@ -2,9 +2,57 @@ import { ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { Link } from "react-router-dom";
 import SectionTitle from "../components/shared/SectionTitle";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
+import emailjs from '@emailjs/browser';
+import { toast } from "sonner";
 
 const Cart = () => {
-  const { items, removeItem, getTotalPrice } = useCart();
+  const { items, removeItem, getTotalPrice, clearCart } = useCart();
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      const orderDetails = items.map(item => 
+        `${item.name} - ${item.quantity}шт. - ${item.price * item.quantity}₽`
+      ).join('\n');
+
+      const templateParams = {
+        to_email: 'homestyle158@gmail.com',
+        from_name: formData.name,
+        from_email: formData.email,
+        from_phone: formData.phone,
+        from_address: formData.address,
+        order_details: orderDetails,
+        total_price: `${getTotalPrice()}₽`,
+      };
+
+      await emailjs.send(
+        'YOUR_SERVICE_ID',
+        'YOUR_TEMPLATE_ID',
+        templateParams,
+        'YOUR_PUBLIC_KEY'
+      );
+
+      toast.success("Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.");
+      clearCart();
+    } catch (error) {
+      console.error('Error sending order:', error);
+      toast.error("Произошла ошибка при отправке заказа. Пожалуйста, попробуйте позже.");
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -57,7 +105,77 @@ const Cart = () => {
             <span>Итого:</span>
             <span>{getTotalPrice().toLocaleString("ru-RU")} ₽</span>
           </div>
-          <button className="btn-primary mt-4 w-full">Оформить заказ</button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="btn-primary mt-4 w-full">Оформить заказ</button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Оформление заказа</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmitOrder} className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    Имя
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                    Телефон
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                    Адрес доставки
+                  </label>
+                  <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent"
+                  />
+                </div>
+                <button type="submit" className="btn-primary w-full">
+                  Подтвердить заказ
+                </button>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>
