@@ -2,8 +2,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS
-emailjs.init("c_WX-BiMyFlw2O75HAlbT");
+// Initialize EmailJS with your public key
+emailjs.init("YOUR_PUBLIC_KEY_FROM_DASHBOARD");
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -25,15 +25,20 @@ const ContactForm = () => {
         message: formData.message,
       };
 
-      await emailjs.send(
-        'service_ntpcrkx',
-        'template_9nytvtb',
-        templateParams,
-        'c_WX-BiMyFlw2O75HAlbT'
+      const response = await emailjs.send(
+        'YOUR_SERVICE_ID',
+        'YOUR_TEMPLATE_ID',
+        templateParams
       );
 
-      toast.success("Сообщение отправлено! Мы свяжемся с вами в ближайшее время.");
-      setFormData({ name: "", phone: "", email: "", message: "" });
+      console.log('EmailJS Response:', response);
+
+      if (response.status === 200) {
+        toast.success("Сообщение отправлено! Мы свяжемся с вами в ближайшее время.");
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      } else {
+        throw new Error('Failed to send email');
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error("Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте позже.");

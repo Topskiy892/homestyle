@@ -7,8 +7,8 @@ import { useState } from "react";
 import emailjs from '@emailjs/browser';
 import { toast } from "sonner";
 
-// Initialize EmailJS
-emailjs.init("c_WX-BiMyFlw2O75HAlbT");
+// Initialize EmailJS with your public key
+emailjs.init("YOUR_PUBLIC_KEY_FROM_DASHBOARD");
 
 const Cart = () => {
   const { items, removeItem, getTotalPrice, clearCart } = useCart();
@@ -42,15 +42,20 @@ const Cart = () => {
         total_price: `${getTotalPrice()}₽`,
       };
 
-      await emailjs.send(
-        'service_ntpcrkx',
-        'template_9nytvtb',
-        templateParams,
-        'c_WX-BiMyFlw2O75HAlbT'
+      const response = await emailjs.send(
+        'YOUR_SERVICE_ID',
+        'YOUR_TEMPLATE_ID',
+        templateParams
       );
 
-      toast.success("Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.");
-      clearCart();
+      console.log('EmailJS Response:', response);
+      
+      if (response.status === 200) {
+        toast.success("Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.");
+        clearCart();
+      } else {
+        throw new Error('Failed to send email');
+      }
     } catch (error) {
       console.error('Error sending order:', error);
       toast.error("Произошла ошибка при отправке заказа. Пожалуйста, попробуйте позже.");
