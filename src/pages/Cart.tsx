@@ -7,6 +7,9 @@ import { useState } from "react";
 import emailjs from '@emailjs/browser';
 import { toast } from "sonner";
 
+// Initialize EmailJS
+emailjs.init("c_WX-BiMyFlw2O75HAlbT");
+
 const Cart = () => {
   const { items, removeItem, getTotalPrice, clearCart } = useCart();
   const [formData, setFormData] = useState({
@@ -40,10 +43,10 @@ const Cart = () => {
       };
 
       await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        'service_ntpcrkx',
+        'template_9nytvtb',
         templateParams,
-        'YOUR_PUBLIC_KEY'
+        'c_WX-BiMyFlw2O75HAlbT'
       );
 
       toast.success("Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.");

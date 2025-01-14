@@ -2,6 +2,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
+// Initialize EmailJS
+emailjs.init("c_WX-BiMyFlw2O75HAlbT");
+
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: "",
