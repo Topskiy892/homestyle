@@ -8,7 +8,7 @@ import emailjs from '@emailjs/browser';
 import { toast } from "sonner";
 
 // Initialize EmailJS with your public key
-emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your actual public key from https://dashboard.emailjs.com/admin/account
+emailjs.init(process.env.EMAILJS_PUBLIC_KEY);
 
 const Cart = () => {
   const { items, removeItem, getTotalPrice, clearCart } = useCart();
@@ -45,10 +45,10 @@ const Cart = () => {
       console.log('Sending order with params:', templateParams);
 
       const response = await emailjs.send(
-        'YOUR_SERVICE_ID', // Replace with your actual service ID
-        'YOUR_TEMPLATE_ID', // Replace with your actual template ID
+        'service_ntpcrkx',
+        'template_9nytvtb',
         templateParams,
-        'YOUR_PUBLIC_KEY' // Replace with your actual public key
+        process.env.EMAILJS_PUBLIC_KEY
       );
 
       console.log('EmailJS Response:', response);
