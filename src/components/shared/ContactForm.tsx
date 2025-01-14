@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS with your public key
-emailjs.init("YOUR_PUBLIC_KEY_FROM_DASHBOARD");
+emailjs.init("c_WX-BiMyFlw2O75HAlbT");
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -26,9 +26,10 @@ const ContactForm = () => {
       };
 
       const response = await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
-        templateParams
+        'service_ntpcrkx',
+        'template_9nytvtb',
+        templateParams,
+        'c_WX-BiMyFlw2O75HAlbT'
       );
 
       console.log('EmailJS Response:', response);

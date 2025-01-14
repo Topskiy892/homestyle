@@ -8,7 +8,7 @@ import emailjs from '@emailjs/browser';
 import { toast } from "sonner";
 
 // Initialize EmailJS with your public key
-emailjs.init("YOUR_PUBLIC_KEY_FROM_DASHBOARD");
+emailjs.init("c_WX-BiMyFlw2O75HAlbT");
 
 const Cart = () => {
   const { items, removeItem, getTotalPrice, clearCart } = useCart();
@@ -43,9 +43,10 @@ const Cart = () => {
       };
 
       const response = await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
-        templateParams
+        'service_ntpcrkx',
+        'template_9nytvtb',
+        templateParams,
+        'c_WX-BiMyFlw2O75HAlbT'
       );
 
       console.log('EmailJS Response:', response);
