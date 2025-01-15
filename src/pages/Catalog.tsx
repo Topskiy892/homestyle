@@ -4,6 +4,11 @@ import SectionTitle from "../components/shared/SectionTitle";
 import ProductCard from "../components/shared/ProductCard";
 import { Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type Product = Database['public']['Tables']['products']['Row'] & {
+  product_images: Database['public']['Tables']['product_images']['Row'][]
+};
 
 const categories = [
   "Все",
@@ -39,8 +44,11 @@ const Catalog = () => {
       }
 
       console.log("Products fetched:", data);
-      return data.map((product) => ({
-        ...product,
+      return (data as Product[]).map((product) => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        category: product.category || "",
         image: product.product_images.find((img) => img.is_primary)?.image_path ||
           product.product_images[0]?.image_path ||
           "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7",
