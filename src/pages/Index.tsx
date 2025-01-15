@@ -61,7 +61,7 @@ const testimonials = [
   {
     name: "Сергей К.",
     role: "Дизайнер интерьеров",
-    content: "Регулярно сотрудничаем с AllLoft. Всегда точные сроки и отличное качество.",
+    content: "Регулярно сотрудничаем с HomeStyle. Всегда точные сроки и отличное качество.",
     rating: 5,
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80",
   }
