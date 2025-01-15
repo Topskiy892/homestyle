@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import SectionTitle from "../components/shared/SectionTitle";
 import ProductCard from "../components/shared/ProductCard";
 import { Search } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const categories = [
   "Все",
@@ -13,75 +15,38 @@ const categories = [
   "Кровати",
 ];
 
-const products = [
-  {
-    id: 1,
-    name: "Кухонный гарнитур Modern",
-    price: 85000,
-    image: "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Кухни",
-  },
-  {
-    id: 2,
-    name: "Шкаф-купе Premium",
-    price: 45000,
-    image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Шкафы",
-  },
-  {
-    id: 3,
-    name: "Стеллаж Loft",
-    price: 28000,
-    image: "https://images.unsplash.com/photo-1493934558415-9d19f0b2b4d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Стеллажи",
-  },
-  {
-    id: 4,
-    name: "Обеденный стол Industrial",
-    price: 32000,
-    image: "https://images.unsplash.com/photo-1577140917170-285929fb55b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Столы",
-  },
-  {
-    id: 5,
-    name: "Стул Vintage",
-    price: 12000,
-    image: "https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Стулья",
-  },
-  {
-    id: 6,
-    name: "Кровать Comfort",
-    price: 55000,
-    image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Кровати",
-  },
-  {
-    id: 7,
-    name: "Кухонный гарнитур Classic",
-    price: 95000,
-    image: "https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Кухни",
-  },
-  {
-    id: 8,
-    name: "Шкаф для одежды Minimal",
-    price: 38000,
-    image: "https://images.unsplash.com/photo-1558997519-83ea9252edf8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Шкафы",
-  },
-  {
-    id: 9,
-    name: "Стол письменный Modern",
-    price: 25000,
-    image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    category: "Столы",
-  }
-];
-
 const Catalog = () => {
   const [selectedCategory, setSelectedCategory] = useState("Все");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      console.log("Fetching products from Supabase...");
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          product_images (
+            image_path,
+            is_primary
+          )
+        `);
+
+      if (error) {
+        console.error("Error fetching products:", error);
+        throw error;
+      }
+
+      console.log("Products fetched:", data);
+      return data.map((product) => ({
+        ...product,
+        image: product.product_images.find((img) => img.is_primary)?.image_path ||
+          product.product_images[0]?.image_path ||
+          "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7",
+      }));
+    },
+  });
 
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
@@ -131,20 +96,29 @@ const Catalog = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map((product, index) => (
-            <div
-              key={product.id}
-              className="animate-fade-up"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <ProductCard {...product} />
-            </div>
-          ))}
-        </div>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <p className="text-lg text-muted-foreground">Загрузка товаров...</p>
+          </div>
+        )}
 
-        {filteredProducts.length === 0 && (
+        {/* Products Grid */}
+        {!isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProducts.map((product, index) => (
+              <div
+                key={product.id}
+                className="animate-fade-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <ProductCard {...product} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!isLoading && filteredProducts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-lg text-muted-foreground">
               По вашему запросу ничего не найдено
