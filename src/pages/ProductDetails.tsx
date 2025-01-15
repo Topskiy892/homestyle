@@ -10,7 +10,7 @@ import { toast } from "sonner";
 const product = {
   id: 1,
   name: "Кухонный гарнитур Modern",
-  price: 85000,
+  price: 80000,
   description:
     "Современный кухонный гарнитур в стиле лофт. Функциональное решение для вашей кухни с использованием качественных материалов и фурнитуры.",
   images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
