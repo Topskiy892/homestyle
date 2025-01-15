@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import SectionTitle from "../components/shared/SectionTitle";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
-import emailjs from '@emailjs/browser';
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Cart = () => {
@@ -15,6 +15,7 @@ const Cart = () => {
     email: "",
     address: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,42 +24,66 @@ const Cart = () => {
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     try {
+      // 1. Create order in database
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          user_name: formData.name,
+          user_email: formData.email,
+          user_phone: formData.phone,
+          delivery_address: formData.address,
+          total_amount: getTotalPrice(),
+          status: 'new'
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // 2. Create order items
+      const orderItems = items.map(item => ({
+        order_id: orderData.id,
+        product_id: item.id,
+        quantity: item.quantity,
+        price_at_time: item.price
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      // 3. Send confirmation email
       const orderDetails = items.map(item => 
-        `${item.name} - ${item.quantity}шт. - ${item.price * item.quantity}₽`
-      ).join('\n');
+        `<p>${item.name} - ${item.quantity}шт. - ${item.price * item.quantity}₽</p>`
+      ).join('');
 
-      const templateParams = {
-        to_email: formData.email,
-        from_name: formData.name,
-        from_email: formData.email,
-        from_phone: formData.phone,
-        from_address: formData.address,
-        order_details: orderDetails,
-        total_price: `${getTotalPrice()}₽`,
-      };
+      const { error: emailError } = await supabase.functions.invoke('send-order-confirmation', {
+        body: {
+          to: formData.email,
+          userName: formData.name,
+          orderDetails: orderDetails,
+          totalAmount: getTotalPrice(),
+          deliveryAddress: formData.address
+        }
+      });
 
-      console.log('Sending order with params:', templateParams);
-
-      const response = await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        templateParams,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
-
-      console.log('EmailJS Response:', response);
-      
-      if (response.status === 200) {
-        toast.success("Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.");
-        clearCart();
-      } else {
-        throw new Error('Failed to send email');
+      if (emailError) {
+        console.error('Error sending confirmation email:', emailError);
+        // Continue with order success even if email fails
       }
+
+      toast.success("Заказ успешно оформлен! Мы отправили подтверждение на вашу почту.");
+      clearCart();
     } catch (error) {
-      console.error('Error sending order:', error);
-      toast.error("Произошла ошибка при отправке заказа. Пожалуйста, попробуйте позже.");
+      console.error('Error submitting order:', error);
+      toast.error("Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте позже.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -178,8 +203,12 @@ const Cart = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent"
                   />
                 </div>
-                <button type="submit" className="btn-primary w-full">
-                  Подтвердить заказ
+                <button 
+                  type="submit" 
+                  className="btn-primary w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Оформление..." : "Подтвердить заказ"}
                 </button>
               </form>
             </DialogContent>

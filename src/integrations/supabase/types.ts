@@ -9,6 +9,81 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      order_items: {
+        Row: {
+          created_at: string
+          id: number
+          order_id: number | null
+          price_at_time: number
+          product_id: number | null
+          quantity: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          order_id?: number | null
+          price_at_time: number
+          product_id?: number | null
+          quantity: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          order_id?: number | null
+          price_at_time?: number
+          product_id?: number | null
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          delivery_address: string
+          id: number
+          status: string
+          total_amount: number
+          user_email: string
+          user_name: string
+          user_phone: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_address: string
+          id?: number
+          status?: string
+          total_amount: number
+          user_email: string
+          user_name: string
+          user_phone: string
+        }
+        Update: {
+          created_at?: string
+          delivery_address?: string
+          id?: number
+          status?: string
+          total_amount?: number
+          user_email?: string
+          user_name?: string
+          user_phone?: string
+        }
+        Relationships: []
+      }
       product_images: {
         Row: {
           created_at: string
