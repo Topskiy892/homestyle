@@ -151,7 +151,7 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-up">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                О компании AllLoft
+                О компании HomeStyle
               </h2>
               <p className="text-lg mb-6">
                 Мы специализируемся на производстве современной мебели в стиле
