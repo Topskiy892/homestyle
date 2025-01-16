@@ -21,7 +21,10 @@ const ProductDetails = () => {
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      console.log("Fetching product details for id:", id);
+      if (!id) throw new Error("No product ID provided");
+      const productId = parseInt(id);
+      
+      console.log("Fetching product details for id:", productId);
       const { data, error } = await supabase
         .from("products")
         .select(`
@@ -31,7 +34,7 @@ const ProductDetails = () => {
             is_primary
           )
         `)
-        .eq("id", id)
+        .eq("id", productId)
         .single();
 
       if (error) {
@@ -47,7 +50,8 @@ const ProductDetails = () => {
   const { data: relatedProducts = [] } = useQuery({
     queryKey: ["related-products", product?.category],
     queryFn: async () => {
-      if (!product?.category) return [];
+      if (!product?.category || !id) return [];
+      const productId = parseInt(id);
       
       console.log("Fetching related products for category:", product.category);
       const { data, error } = await supabase
@@ -60,7 +64,7 @@ const ProductDetails = () => {
           )
         `)
         .eq("category", product.category)
-        .neq("id", id)
+        .neq("id", productId)
         .limit(2);
 
       if (error) {
