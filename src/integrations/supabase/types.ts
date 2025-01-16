@@ -119,27 +119,42 @@ export type Database = {
       products: {
         Row: {
           category: string | null
+          color: string | null
           created_at: string
           description: string | null
+          dimensions: string | null
+          hardware: string | null
           id: number
+          material: string | null
           name: string
           price: number
+          warranty: string | null
         }
         Insert: {
           category?: string | null
+          color?: string | null
           created_at?: string
           description?: string | null
+          dimensions?: string | null
+          hardware?: string | null
           id?: number
+          material?: string | null
           name: string
           price: number
+          warranty?: string | null
         }
         Update: {
           category?: string | null
+          color?: string | null
           created_at?: string
           description?: string | null
+          dimensions?: string | null
+          hardware?: string | null
           id?: number
+          material?: string | null
           name?: string
           price?: number
+          warranty?: string | null
         }
         Relationships: []
       }

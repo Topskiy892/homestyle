@@ -1,65 +1,131 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChevronRight, Truck, Shield, Wrench } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import SectionTitle from "../components/shared/SectionTitle";
 import ProductCard from "../components/shared/ProductCard";
 import { useCart } from "../contexts/CartContext";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
-// Mock data - replace with real data
-const product = {
-  id: 1,
-  name: "Кухонный гарнитур Modern",
-  price: 80000,
-  description:
-    "Современный кухонный гарнитур в стиле лофт. Функциональное решение для вашей кухни с использованием качественных материалов и фурнитуры.",
-  images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-  specifications: {
-    Материал: "ЛДСП, МДФ",
-    Цвет: "Графит",
-    Размеры: "3000 x 2200 x 600 мм",
-    Фурнитура: "Blum (Австрия)",
-    Гарантия: "2 года",
-  },
-  category: "Кухни",
+type Product = Database['public']['Tables']['products']['Row'] & {
+  product_images: Database['public']['Tables']['product_images']['Row'][];
 };
-
-const relatedProducts = [
-  {
-    id: 2,
-    name: "Кухонный гарнитур Classic",
-    price: 75000,
-    image: "/placeholder.svg",
-    category: "Кухни",
-  },
-  {
-    id: 3,
-    name: "Кухонный гарнитур Premium",
-    price: 95000,
-    image: "/placeholder.svg",
-    category: "Кухни",
-  },
-];
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
   const { addItem } = useCart();
 
+  const { data: product, isLoading } = useQuery({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      console.log("Fetching product details for id:", id);
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          product_images (
+            image_path,
+            is_primary
+          )
+        `)
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching product:", error);
+        throw error;
+      }
+
+      console.log("Product data fetched:", data);
+      return data as Product;
+    },
+  });
+
+  const { data: relatedProducts = [] } = useQuery({
+    queryKey: ["related-products", product?.category],
+    queryFn: async () => {
+      if (!product?.category) return [];
+      
+      console.log("Fetching related products for category:", product.category);
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          product_images (
+            image_path,
+            is_primary
+          )
+        `)
+        .eq("category", product.category)
+        .neq("id", id)
+        .limit(2);
+
+      if (error) {
+        console.error("Error fetching related products:", error);
+        throw error;
+      }
+
+      console.log("Related products fetched:", data);
+      return data.map((product: Product) => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        category: product.category || "",
+        image: product.product_images.find((img) => img.is_primary)?.image_path ||
+          product.product_images[0]?.image_path ||
+          "/placeholder.svg",
+      }));
+    },
+    enabled: !!product?.category,
+  });
+
   const handleAddToCart = () => {
+    if (!product) return;
+    
     addItem({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
-      category: product.category,
+      image: product.product_images[0]?.image_path || "/placeholder.svg",
+      category: product.category || "",
     });
+    
+    toast.success("Товар добавлен в корзину");
   };
 
-  const handleConsultation = () => {
-    toast.success(
-      "Запрос на консультацию отправлен! Мы свяжемся с вами в ближайшее время."
+  if (isLoading) {
+    return (
+      <div className="container py-12">
+        <div className="text-center">
+          <p className="text-lg text-muted-foreground">Загрузка товара...</p>
+        </div>
+      </div>
     );
+  }
+
+  if (!product) {
+    return (
+      <div className="container py-12">
+        <div className="text-center">
+          <p className="text-lg text-muted-foreground">Товар не найден</p>
+        </div>
+      </div>
+    );
+  }
+
+  const productImages = product.product_images.length > 0 
+    ? product.product_images.map(img => img.image_path)
+    : ["/placeholder.svg"];
+
+  const specifications = {
+    "Материал": product.material || "Не указан",
+    "Цвет": product.color || "Не указан",
+    "Размеры": product.dimensions || "Не указаны",
+    "Фурнитура": product.hardware || "Не указана",
+    "Гарантия": product.warranty || "Не указана",
   };
 
   return (
@@ -84,13 +150,13 @@ const ProductDetails = () => {
           <div className="space-y-4">
             <div className="aspect-square rounded-lg overflow-hidden">
               <img
-                src={product.images[selectedImage]}
+                src={productImages[selectedImage]}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="grid grid-cols-3 gap-4">
-              {product.images.map((image, index) => (
+              {productImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
@@ -126,7 +192,7 @@ const ProductDetails = () => {
                 Характеристики
               </h2>
               <div className="space-y-2">
-                {Object.entries(product.specifications).map(([key, value]) => (
+                {Object.entries(specifications).map(([key, value]) => (
                   <div
                     key={key}
                     className="flex justify-between py-2 border-b border-gray-200"
@@ -146,7 +212,7 @@ const ProductDetails = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Shield className="text-accent" />
-                <span className="text-sm">Гарантия 2 года</span>
+                <span className="text-sm">Гарантия {product.warranty || "2 года"}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Wrench className="text-accent" />
@@ -157,36 +223,32 @@ const ProductDetails = () => {
             {/* Action Buttons */}
             <div className="space-y-4">
               <button onClick={handleAddToCart} className="btn-primary w-full">
-                Заказать
-              </button>
-              <button
-                onClick={handleConsultation}
-                className="btn-secondary w-full"
-              >
-                Получить консультацию
+                В корзину
               </button>
             </div>
           </div>
         </div>
 
         {/* Related Products */}
-        <section>
-          <SectionTitle
-            title="Похожие товары"
-            subtitle="Вам также может понравиться"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {relatedProducts.map((product, index) => (
-              <div
-                key={product.id}
-                className="animate-fade-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard {...product} />
-              </div>
-            ))}
-          </div>
-        </section>
+        {relatedProducts.length > 0 && (
+          <section>
+            <SectionTitle
+              title="Похожие товары"
+              subtitle="Вам также может понравиться"
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {relatedProducts.map((product, index) => (
+                <div
+                  key={product.id}
+                  className="animate-fade-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard {...product} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
