@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
+import { supabase } from "@/integrations/supabase/client";
 
 // Initialize EmailJS with your public key
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
@@ -17,6 +18,19 @@ const ContactForm = () => {
     e.preventDefault();
     
     try {
+      console.log('Sending contact form with data:', formData);
+
+      // First, save to Supabase
+      const { error: supabaseError } = await supabase
+        .from('contact_messages')
+        .insert([formData]);
+
+      if (supabaseError) {
+        console.error('Supabase error:', supabaseError);
+        throw supabaseError;
+      }
+
+      // Then send email notification
       const templateParams = {
         to_email: 'homestyle158@gmail.com',
         from_name: formData.name,
@@ -25,7 +39,7 @@ const ContactForm = () => {
         message: formData.message,
       };
 
-      console.log('Sending contact form with params:', templateParams);
+      console.log('Sending email with params:', templateParams);
 
       const response = await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
