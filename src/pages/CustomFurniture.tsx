@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import SectionTitle from "@/components/shared/SectionTitle";
-import { Ruler, Clock, Palette, Shield, Wrench } from "lucide-react";
+import { Ruler, Clock, Palette, Shield, Wrench, CheckCircle2, Star } from "lucide-react";
 
 const CustomFurniture = () => {
   const [formData, setFormData] = useState({
@@ -80,6 +80,69 @@ const CustomFurniture = () => {
     },
   ];
 
+  const workProcess = [
+    {
+      step: 1,
+      title: "Консультация и замер",
+      description: "Бесплатный выезд специалиста для обсуждения проекта и точных замеров",
+      image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&q=80",
+    },
+    {
+      step: 2,
+      title: "Проектирование",
+      description: "Создание 3D-визуализации и детального проекта мебели",
+      image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80",
+    },
+    {
+      step: 3,
+      title: "Производство",
+      description: "Изготовление мебели на современном оборудовании",
+      image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&q=80",
+    },
+    {
+      step: 4,
+      title: "Монтаж",
+      description: "Профессиональная установка мебели",
+      image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&q=80",
+    },
+  ];
+
+  const completedProjects = [
+    {
+      title: "Кухонный гарнитур",
+      description: "Современная кухня со встроенной техникой",
+      image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80",
+    },
+    {
+      title: "Шкаф-купе",
+      description: "Вместительный шкаф с зеркальными дверями",
+      image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80",
+    },
+    {
+      title: "Гардеробная",
+      description: "Функциональная гардеробная комната",
+      image: "https://images.unsplash.com/photo-1558997519-83ea9252edf8?auto=format&fit=crop&q=80",
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: "Анна М.",
+      text: "Заказывали кухню, очень довольны результатом. Все сделали точно в срок и качественно.",
+      rating: 5,
+    },
+    {
+      name: "Сергей К.",
+      text: "Отличная работа! Шкаф-купе превзошел все ожидания. Спасибо за профессионализм!",
+      rating: 5,
+    },
+    {
+      name: "Елена В.",
+      text: "Благодарим за прекрасную гардеробную. Все продумано до мелочей.",
+      rating: 5,
+    },
+  ];
+
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
@@ -95,8 +158,18 @@ const CustomFurniture = () => {
             Мебель на заказ
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl">
-            Создаем уникальную мебель по вашим размерам и пожеланиям
+            Создаем уникальную мебель по вашим размерам и пожеланиям с 2010 года
           </p>
+          <div className="flex gap-4">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-6 h-6 text-accent" />
+              <span>Более 1000 довольных клиентов</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-6 h-6 text-accent" />
+              <span>10+ лет опыта</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -111,7 +184,7 @@ const CustomFurniture = () => {
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="card p-6 text-center"
+                className="bg-white rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-shadow"
               >
                 <benefit.icon className="w-12 h-12 mx-auto mb-4 text-accent" />
                 <h3 className="font-heading font-semibold text-lg mb-2">
@@ -124,14 +197,90 @@ const CustomFurniture = () => {
         </div>
       </section>
 
-      {/* Form Section */}
+      {/* Work Process Section */}
       <section className="py-20">
+        <div className="container">
+          <SectionTitle
+            title="Как мы работаем"
+            subtitle="Процесс создания вашей идеальной мебели"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {workProcess.map((step, index) => (
+              <div key={index} className="flex gap-6 items-start">
+                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold">
+                  {step.step}
+                </div>
+                <div className="flex-grow">
+                  <h3 className="text-xl font-heading font-semibold mb-2">{step.title}</h3>
+                  <p className="text-muted-foreground mb-4">{step.description}</p>
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Completed Projects Section */}
+      <section className="py-20 bg-secondary">
+        <div className="container">
+          <SectionTitle
+            title="Наши работы"
+            subtitle="Примеры реализованных проектов"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {completedProjects.map((project, index) => (
+              <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-64 object-cover"
+                />
+                <div className="p-6">
+                  <h3 className="font-heading font-semibold text-lg mb-2">{project.title}</h3>
+                  <p className="text-muted-foreground">{project.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20">
+        <div className="container">
+          <SectionTitle
+            title="Отзывы клиентов"
+            subtitle="Что говорят о нас наши клиенты"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4">{testimonial.text}</p>
+                <p className="font-semibold">{testimonial.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Form Section */}
+      <section className="py-20 bg-secondary">
         <div className="container max-w-4xl">
           <SectionTitle
             title="Заявка на бесплатный замер"
             subtitle="Оставьте заявку, и наш специалист свяжется с вами для уточнения деталей"
           />
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-lg p-8 shadow-md">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -265,7 +414,7 @@ const CustomFurniture = () => {
               />
             </div>
 
-            <button type="submit" className="btn-primary w-full">
+            <button type="submit" className="w-full bg-accent text-white py-3 px-6 rounded-md hover:bg-accent/90 transition-colors">
               Отправить заявку
             </button>
           </form>
