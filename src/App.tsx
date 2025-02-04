@@ -11,6 +11,7 @@ import About from "./pages/About";
 import Contacts from "./pages/Contacts";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import CustomFurniture from "./pages/CustomFurniture";
 import { CartProvider } from "./contexts/CartContext";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/custom-furniture" element={<CustomFurniture />} />
               </Routes>
             </main>
             <Footer />

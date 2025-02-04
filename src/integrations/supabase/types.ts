@@ -36,6 +36,48 @@ export type Database = {
         }
         Relationships: []
       }
+      measurement_requests: {
+        Row: {
+          additional_notes: string | null
+          address: string
+          created_at: string
+          email: string
+          furniture_type: string
+          id: number
+          name: string
+          phone: string
+          preferred_date: string | null
+          preferred_time: string | null
+          status: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          address: string
+          created_at?: string
+          email: string
+          furniture_type: string
+          id?: number
+          name: string
+          phone: string
+          preferred_date?: string | null
+          preferred_time?: string | null
+          status?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          address?: string
+          created_at?: string
+          email?: string
+          furniture_type?: string
+          id?: number
+          name?: string
+          phone?: string
+          preferred_date?: string | null
+          preferred_time?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
