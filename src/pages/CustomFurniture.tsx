@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import SectionTitle from "@/components/shared/SectionTitle";
-import { Ruler, Clock, Palette, Shield, Tool } from "lucide-react";
+import { Ruler, Clock, Palette, Shield, Wrench } from "lucide-react";
 
 const CustomFurniture = () => {
   const [formData, setFormData] = useState({
@@ -69,7 +69,7 @@ const CustomFurniture = () => {
       description: "Разработка уникального проекта под ваши потребности",
     },
     {
-      icon: Tool,
+      icon: Wrench,
       title: "Профессиональный монтаж",
       description: "Установка мебели опытными специалистами",
     },
