@@ -125,6 +125,7 @@ export type Database = {
           created_at: string
           delivery_address: string
           id: number
+          order_details: Json | null
           status: string
           total_amount: number
           user_email: string
@@ -135,6 +136,7 @@ export type Database = {
           created_at?: string
           delivery_address: string
           id?: number
+          order_details?: Json | null
           status?: string
           total_amount: number
           user_email: string
@@ -145,6 +147,7 @@ export type Database = {
           created_at?: string
           delivery_address?: string
           id?: number
+          order_details?: Json | null
           status?: string
           total_amount?: number
           user_email?: string

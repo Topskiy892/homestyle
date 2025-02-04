@@ -29,7 +29,17 @@ const Cart = () => {
     try {
       console.log("Creating order with items:", items);
       
-      // 1. Create order in database
+      // Prepare order details
+      const orderDetails = items.map(item => ({
+        product_id: item.id,
+        product_name: item.name,
+        category: item.category,
+        quantity: item.quantity,
+        unit_price: item.price,
+        total_price: item.price * item.quantity
+      }));
+
+      // 1. Create order in database with order details
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -38,7 +48,8 @@ const Cart = () => {
           user_phone: formData.phone,
           delivery_address: formData.address,
           total_amount: getTotalPrice(),
-          status: 'new'
+          status: 'new',
+          order_details: orderDetails
         })
         .select()
         .single();
@@ -68,7 +79,7 @@ const Cart = () => {
       }
 
       // 3. Send confirmation email
-      const orderDetails = items.map(item => 
+      const orderDetailsHtml = items.map(item => 
         `<p>${item.name} - ${item.quantity}шт. - ${item.price * item.quantity}₽</p>`
       ).join('');
 
@@ -76,7 +87,7 @@ const Cart = () => {
         body: {
           to: formData.email,
           userName: formData.name,
-          orderDetails: orderDetails,
+          orderDetails: orderDetailsHtml,
           totalAmount: getTotalPrice(),
           deliveryAddress: formData.address
         }
