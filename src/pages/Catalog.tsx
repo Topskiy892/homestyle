@@ -5,6 +5,7 @@ import ProductCard from "../components/shared/ProductCard";
 import { Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
+import { toast } from "sonner";
 
 type Product = Database['public']['Tables']['products']['Row'] & {
   product_images: Database['public']['Tables']['product_images']['Row'][]
@@ -24,36 +25,49 @@ const Catalog = () => {
   const [selectedCategory, setSelectedCategory] = useState("Все");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [], isLoading, error } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
       console.log("Fetching products from Supabase...");
-      const { data, error } = await supabase
-        .from("products")
-        .select(`
-          *,
-          product_images (
-            image_path,
-            is_primary
-          )
-        `);
+      try {
+        const { data, error } = await supabase
+          .from("products")
+          .select(`
+            *,
+            product_images (
+              image_path,
+              is_primary
+            )
+          `);
 
-      if (error) {
-        console.error("Error fetching products:", error);
+        if (error) {
+          console.error("Supabase error:", error);
+          throw error;
+        }
+
+        if (!data) {
+          console.log("No products found");
+          return [];
+        }
+
+        console.log("Products fetched successfully:", data);
+        return (data as Product[]).map((product) => ({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          category: product.category || "",
+          image: product.product_images.find((img) => img.is_primary)?.image_path ||
+            product.product_images[0]?.image_path ||
+            "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7",
+        }));
+      } catch (error) {
+        console.error("Error in products query:", error);
+        toast.error("Ошибка при загрузке товаров");
         throw error;
       }
-
-      console.log("Products fetched:", data);
-      return (data as Product[]).map((product) => ({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        category: product.category || "",
-        image: product.product_images.find((img) => img.is_primary)?.image_path ||
-          product.product_images[0]?.image_path ||
-          "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7",
-      }));
     },
+    retry: 2,
+    retryDelay: 1000,
   });
 
   const filteredProducts = products.filter((product) => {
@@ -104,6 +118,15 @@ const Catalog = () => {
           </div>
         </div>
 
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-lg text-red-500">
+              Произошла ошибка при загрузке товаров. Пожалуйста, попробуйте позже.
+            </p>
+          </div>
+        )}
+
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-12">
@@ -112,7 +135,7 @@ const Catalog = () => {
         )}
 
         {/* Products Grid */}
-        {!isLoading && (
+        {!isLoading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProducts.map((product, index) => (
               <div
@@ -126,7 +149,7 @@ const Catalog = () => {
           </div>
         )}
 
-        {!isLoading && filteredProducts.length === 0 && (
+        {!isLoading && !error && filteredProducts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-lg text-muted-foreground">
               По вашему запросу ничего не найдено
