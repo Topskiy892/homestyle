@@ -2,7 +2,7 @@ import { ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { Link } from "react-router-dom";
 import SectionTitle from "../components/shared/SectionTitle";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -27,6 +27,8 @@ const Cart = () => {
     setIsSubmitting(true);
     
     try {
+      console.log("Creating order with items:", items);
+      
       // 1. Create order in database
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
@@ -41,9 +43,14 @@ const Cart = () => {
         .select()
         .single();
 
-      if (orderError) throw orderError;
+      if (orderError) {
+        console.error("Error creating order:", orderError);
+        throw orderError;
+      }
 
-      // 2. Create order items
+      console.log("Order created:", orderData);
+
+      // 2. Create order items with product details
       const orderItems = items.map(item => ({
         order_id: orderData.id,
         product_id: item.id,
@@ -55,7 +62,10 @@ const Cart = () => {
         .from('order_items')
         .insert(orderItems);
 
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        console.error("Error creating order items:", itemsError);
+        throw itemsError;
+      }
 
       // 3. Send confirmation email
       const orderDetails = items.map(item => 
@@ -121,8 +131,16 @@ const Cart = () => {
             <div className="flex-grow">
               <h3 className="font-medium">{item.name}</h3>
               <p className="text-sm text-muted-foreground">{item.category}</p>
-              <p className="mt-1 font-medium text-accent">
-                {item.price.toLocaleString("ru-RU")} ₽ × {item.quantity}
+              <p className="mt-1">
+                <span className="font-medium text-accent">
+                  {item.price.toLocaleString("ru-RU")} ₽
+                </span>
+                <span className="text-sm text-muted-foreground ml-2">
+                  × {item.quantity} шт.
+                </span>
+              </p>
+              <p className="mt-1 font-medium">
+                Итого: {(item.price * item.quantity).toLocaleString("ru-RU")} ₽
               </p>
             </div>
             <button
@@ -145,6 +163,9 @@ const Cart = () => {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Оформление заказа</DialogTitle>
+                <DialogDescription>
+                  Заполните форму для оформления заказа. Мы свяжемся с вами для подтверждения.
+                </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmitOrder} className="space-y-4">
                 <div>
@@ -202,6 +223,21 @@ const Cart = () => {
                     required
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent"
                   />
+                </div>
+                <div className="mt-4 space-y-2">
+                  <h4 className="font-medium">Ваш заказ:</h4>
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between text-sm">
+                      <span>{item.name} × {item.quantity}</span>
+                      <span>{(item.price * item.quantity).toLocaleString("ru-RU")} ₽</span>
+                    </div>
+                  ))}
+                  <div className="border-t pt-2 font-medium">
+                    <div className="flex justify-between">
+                      <span>Итого:</span>
+                      <span>{getTotalPrice().toLocaleString("ru-RU")} ₽</span>
+                    </div>
+                  </div>
                 </div>
                 <button 
                   type="submit" 
