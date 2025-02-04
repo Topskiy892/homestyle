@@ -25,6 +25,9 @@ const Navbar = () => {
             <Link to="/catalog" className="nav-link">
               Каталог
             </Link>
+            <Link to="/custom-furniture" className="nav-link">
+              Мебель на заказ
+            </Link>
             <Link to="/about" className="nav-link">
               О нас
             </Link>
@@ -73,6 +76,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Каталог
+              </Link>
+              <Link
+                to="/custom-furniture"
+                className="nav-link"
+                onClick={() => setIsOpen(false)}
+              >
+                Мебель на заказ
               </Link>
               <Link
                 to="/about"
